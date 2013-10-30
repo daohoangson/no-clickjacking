@@ -77,5 +77,8 @@
 		}
 	};
 
-	detect();
+	if (window.top === window)
+	{
+		detect();
+	}
 })();
