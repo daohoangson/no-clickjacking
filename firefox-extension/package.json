@@ -5,5 +5,5 @@
   "description": "This extension tries to warn you if it found clickjacking technique on the page you are viewing.",
   "author": "Dao Hoang Son",
   "license": "MPL 2.0",
-  "version": "1.0"
+  "version": "1.0.1"
 }
