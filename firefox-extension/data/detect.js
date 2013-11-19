@@ -7,7 +7,6 @@
 
 	var nodeIdPrefix = '_no-clickjacking-';
 	var nodeIdCount = 0;
-	var processedNodeIds = [];
 
 	var log = function()
 	{
@@ -29,34 +28,29 @@
 			
 			while(node)
 			{
-				// TODO: figure out why getComputedStyle throws exception
-				var style = node.style;
+				if (!node.ownerDocument)
+				{
+					break;
+				}
+
+				var style = node.ownerDocument.defaultView.getComputedStyle(node);
 
 				if (style && parseFloat('0' + style.opacity) < 0.1)
 				{
+					log('found', node, iframe);
+
+					// reset interval to check as fast as possible
+					interval = intervalStep;
+					count = 0;
+
 					var nodeId = node.id;
-					var skip = false;
 					if (!nodeId)
 					{
 						nodeId = nodeIdPrefix + nodeIdCount;
 						nodeIdCount++;
 						node.id = nodeId;
 					}
-
-					if (processedNodeIds.indexOf(nodeId) > -1)
-					{
-						skip = true;
-					}
-
-					if (!skip)
-					{
-						log('found', node, iframe);
-
-						// reset interval to check as fast as possible
-						interval = intervalStep;
-						count = 0;
-						transparentNodeIds.push(nodeId);
-					}
+					transparentNodeIds.push(nodeId);
 				}
 
 				node = node.parentNode;
@@ -69,7 +63,6 @@
 			for (var i in transparentNodeIds)
 			{
 				css += '#' + transparentNodeIds[i] + '{opacity:1 !important;overflow: visible !important}';
-				processedNodeIds.push(transparentNodeIds[i]);
 			}
 
 			var style = document.createElement('style');
