@@ -32,7 +32,7 @@
 				// TODO: figure out why getComputedStyle throws exception
 				var style = node.style;
 
-				if (style && ('' + style.opacity) === '0')
+				if (style && parseFloat('0' + style.opacity) < 0.1)
 				{
 					var nodeId = node.id;
 					var skip = false;

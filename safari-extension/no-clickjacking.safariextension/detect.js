@@ -29,7 +29,7 @@
 			{
 				var style = getComputedStyle(node);
 
-				if (style && ('' + style.opacity) === '0')
+				if (style && parseFloat('0' + style.opacity) < 0.1)
 				{
 					log('found', node, iframe);
 
