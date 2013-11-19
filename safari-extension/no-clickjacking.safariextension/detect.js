@@ -7,6 +7,7 @@
 
 	var nodeIdPrefix = '_no-clickjacking-';
 	var nodeIdCount = 0;
+	var strikes = {};
 
 	var log = function()
 	{
@@ -56,12 +57,41 @@
 			var css = '';
 			for (var i in transparentNodeIds)
 			{
-				css += '#' + transparentNodeIds[i] + '{opacity:1 !important;overflow: visible !important}';
+				var nodeId = transparentNodeIds[i];
+				var node = document.getElementById(nodeId);
+
+				if (typeof strikes[nodeId] == 'undefined')
+				{
+					// first strike
+					strikes[nodeId] = 1;
+				}
+				else
+				{
+					// hmm, subsequent strike... something is fishy
+					strikes[nodeId]++;
+				}
+
+				if (strikes[nodeId] > 3)
+				{
+					// are we declaring a war here?
+					var node = document.getElementById(nodeId);
+					node.parentNode.removeChild(node);
+					log('too many strikes, removed', nodeId);
+				}
+				else
+				{
+					node.style.opacity = 1;
+					node.style.overflow = 'visible';
+					css += '#' + nodeId + '{opacity:1 !important;overflow: visible !important}';
+				}
 			}
 
-			var style = document.createElement('style');
-			style.innerText = css;
-			document.getElementsByTagName('head')[0].appendChild(style);
+			if (css.length > 0)
+			{
+				var style = document.createElement('style');
+				style.innerText = css;
+				document.getElementsByTagName('head')[0].appendChild(style);
+			}
 		}
 
 		if (count < countMax)
