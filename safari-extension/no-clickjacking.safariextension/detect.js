@@ -11,6 +11,7 @@
 
 	var log = function()
 	{
+		return;
 		console.log.apply(console, arguments);
 	}
 
