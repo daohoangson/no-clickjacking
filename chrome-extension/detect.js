@@ -29,27 +29,29 @@
 			
 			while(node)
 			{
-				var style = getComputedStyle(node);
-
-				if (style && parseFloat('0' + style.opacity) < 0.1)
-				{
-					log('found', node, iframe);
-
-					// reset interval to check as fast as possible
-					interval = intervalStep;
-					count = 0;
-
-					var nodeId = node.id;
-					if (!nodeId)
+				if ( typeof(node) == "Element" ) {
+					var style = getComputedStyle(node);
+	
+					if (style && parseFloat('0' + style.opacity) < 0.1)
 					{
-						nodeId = nodeIdPrefix + nodeIdCount;
-						nodeIdCount++;
-						node.id = nodeId;
+						log('found', node, iframe);
+	
+						// reset interval to check as fast as possible
+						interval = intervalStep;
+						count = 0;
+	
+						var nodeId = node.id;
+						if (!nodeId)
+						{
+							nodeId = nodeIdPrefix + nodeIdCount;
+							nodeIdCount++;
+							node.id = nodeId;
+						}
+						transparentNodeIds.push(nodeId);
 					}
-					transparentNodeIds.push(nodeId);
-				}
 
-				node = node.parentNode;
+					node = node.parentNode;
+				}
 			}
 		}
 
